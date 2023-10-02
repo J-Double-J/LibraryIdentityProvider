@@ -1,3 +1,5 @@
+using LibraryIdentityProvider.EFCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIdentityProvider
 {
@@ -13,6 +15,13 @@ namespace LibraryIdentityProvider
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(
+                    builder.Configuration.GetConnectionString("DefaultConnection"),
+                    b => b.MigrationsAssembly(typeof(Program).Assembly.FullName)
+                ));
+
+            builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             var app = builder.Build();
 
