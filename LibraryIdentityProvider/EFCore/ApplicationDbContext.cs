@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LibraryIdentityProvider.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIdentityProvider.EFCore
 {
@@ -6,9 +7,19 @@ namespace LibraryIdentityProvider.EFCore
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        async Task<int> IApplicationDbContext.SaveChanges()
+        public DbSet<UserAccount> UserAccount { get; set; }
+
+        async Task<int> IApplicationDbContext.SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserAccount>().HasKey(ua => ua.Id);
+        }
+
     }
 }

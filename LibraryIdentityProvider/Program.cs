@@ -1,4 +1,5 @@
 using LibraryIdentityProvider.EFCore;
+using LibraryIdentityProvider.Features.UserManagement;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIdentityProvider
@@ -23,6 +24,10 @@ namespace LibraryIdentityProvider
 
             builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
+            builder.Services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+
+            AddRepositories(builder.Services);
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -40,6 +45,11 @@ namespace LibraryIdentityProvider
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void AddRepositories(IServiceCollection services)
+        {
+            services.AddScoped<IUserAccountRepository, UserAccountRepository>();
         }
     }
 }

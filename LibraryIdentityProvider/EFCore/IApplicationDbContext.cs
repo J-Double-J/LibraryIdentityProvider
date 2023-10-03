@@ -1,7 +1,11 @@
-﻿namespace LibraryIdentityProvider.EFCore
+﻿using LibraryIdentityProvider.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace LibraryIdentityProvider.EFCore
 {
     public interface IApplicationDbContext
     {
-        Task<int> SaveChanges();
+        DbSet<UserAccount> UserAccount { get; set; }
+        Task<int> SaveChangesAsync();
     }
 }
