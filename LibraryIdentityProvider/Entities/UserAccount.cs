@@ -3,6 +3,11 @@ namespace LibraryIdentityProvider.Entities
 {
     public class UserAccount : Entity
     {
+        public static readonly int USERNAME_MIN_LENGTH = 3;
+        public static readonly int PASSWORD_MIN_LENGTH = 6;
+        public static readonly int FIRSTNAME_MAX_LENGTH = 64;
+        public static readonly int LASTNAME_MAX_LENGTH = 64;
+
         /// <summary>
         /// Constructor for EFCore
         /// </summary>

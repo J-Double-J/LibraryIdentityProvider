@@ -1,6 +1,9 @@
+using Application.Behaviors;
+using FluentValidation;
 using LibraryIdentityProvider.EFCore;
 using LibraryIdentityProvider.Features.AuthenticationAuthorization.PasswordSecurity;
 using LibraryIdentityProvider.Features.UserManagement;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryIdentityProvider
@@ -26,6 +29,9 @@ namespace LibraryIdentityProvider
             builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>()!);
 
             builder.Services.AddMediatR(configuration => configuration.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+            builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior <,>));
+
+            builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly, includeInternalTypes: true);
 
             AddRepositories(builder.Services);
 
