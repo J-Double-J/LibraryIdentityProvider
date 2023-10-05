@@ -3,12 +3,6 @@ namespace LibraryIdentityProvider.Entities
 {
     public class UserAccount : Entity
     {
-        public string Username { get; private set; }
-        public string[] Claims { get; private set; }
-        public string Email { get; private set; }
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-
         /// <summary>
         /// Constructor for EFCore
         /// </summary>
@@ -27,5 +21,11 @@ namespace LibraryIdentityProvider.Entities
             FirstName = firstName;
             LastName = lastName;
         }
+
+        public string Username { get; private set; }
+        public string[] Claims { get; private set; }
+        public string Email { get; private set; }
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
     }
 }

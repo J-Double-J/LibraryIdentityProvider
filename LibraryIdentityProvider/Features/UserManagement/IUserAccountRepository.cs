@@ -5,6 +5,6 @@ namespace LibraryIdentityProvider.Features.UserManagement
 {
     public interface IUserAccountRepository
     {
-        public Task<Result<UserAccount>> CreateUserAccount(CreateUserAccountCommand command);
+        public Task<Result<UserAccount>> AddUserAccount(UserAccount userAccount);
     }
 }

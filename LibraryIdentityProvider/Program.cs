@@ -1,4 +1,5 @@
 using LibraryIdentityProvider.EFCore;
+using LibraryIdentityProvider.Features.AuthenticationAuthorization.PasswordSecurity;
 using LibraryIdentityProvider.Features.UserManagement;
 using Microsoft.EntityFrameworkCore;
 
@@ -50,6 +51,7 @@ namespace LibraryIdentityProvider
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
+            services.AddScoped<IPasswordRepository, PasswordRepository>();
         }
     }
 }

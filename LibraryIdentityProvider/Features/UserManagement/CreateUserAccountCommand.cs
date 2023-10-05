@@ -1,6 +1,8 @@
 ﻿using LibraryIdentityProvider.Entities;
+using LibraryIdentityProvider.Features.AuthenticationAuthorization.PasswordSecurity;
 using LibraryIdentityProvider.Patterns.CQRS;
 using LibraryIdentityProvider.Patterns.ResultAndError;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace LibraryIdentityProvider.Features.UserManagement
 {
@@ -26,15 +28,28 @@ namespace LibraryIdentityProvider.Features.UserManagement
         public sealed class CreateUserAccountHandler : ICommandHandler<CreateUserAccountCommand, UserAccount>
         {
             IUserAccountRepository _repository;
+            IPasswordRepository _passwordRepository;
 
-            public CreateUserAccountHandler(IUserAccountRepository repository)
+            public CreateUserAccountHandler(IUserAccountRepository repository, IPasswordRepository passwordRepository)
             {
                 _repository = repository;
+                _passwordRepository = passwordRepository;
             }
 
             public async Task<Result<UserAccount>> Handle(CreateUserAccountCommand request, CancellationToken cancellationToken)
             {
-                return await _repository.CreateUserAccount(request);
+                PasswordSecurityService passService = new(_passwordRepository);
+
+                UserAccount account = new(Guid.NewGuid(), request.Username, request.Claims, request.Email, request.FirstName, request.LastName);
+
+                Result result = await passService.CreateAndStorePasswordHash(account.Id, request.Password);
+
+                if (result.IsFailure)
+                {
+                    return Result.Failure<UserAccount>(null, result.Error!);
+                }
+
+                return await _repository.AddUserAccount(account);
             }
         }
     }

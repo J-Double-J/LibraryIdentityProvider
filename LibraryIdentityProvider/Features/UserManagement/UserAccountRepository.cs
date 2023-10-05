@@ -13,14 +13,13 @@ namespace LibraryIdentityProvider.Features.UserManagement
             _context = context;    
         }
 
-        public async Task<Result<UserAccount>> CreateUserAccount(CreateUserAccountCommand command)
+        public async Task<Result<UserAccount>> AddUserAccount(UserAccount userAccount)
         {
-            UserAccount account = new(Guid.NewGuid(), command.Username, command.Claims, command.Email, command.FirstName, command.LastName);
-            _context.UserAccount.Add(account);
+            _context.UserAccount.Add(userAccount);
 
             await _context.SaveChangesAsync();
 
-            return Result.Success(account);
+            return Result.Success(userAccount);
         }
     }
 }

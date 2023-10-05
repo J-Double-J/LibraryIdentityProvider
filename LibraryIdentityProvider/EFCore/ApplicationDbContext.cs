@@ -11,6 +11,8 @@ namespace LibraryIdentityProvider.EFCore
 
         public DbSet<UserAccount> UserAccount { get; set; }
 
+        public DbSet<Password> Password { get; set; }
+
         public DbSet<Role> Role { get; set; }
 
         public DbSet<Permission> Permission { get; set; }
@@ -26,7 +28,22 @@ namespace LibraryIdentityProvider.EFCore
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserAccount>().HasKey(ua => ua.Id);
+            modelBuilder.Entity<UserAccount>(b => 
+                {
+                    b.HasKey(u => u.Id);
+                    b.ToTable("UserAccount");
+                });
+
+            modelBuilder.Entity<Password>(b => {
+                b.HasKey(p => p.PasswordID);
+                b.Property(p => p.UserID).IsRequired();
+
+                b.HasOne<UserAccount>()
+                    .WithOne()
+                    .HasForeignKey<Password>(p => p.UserID);
+
+                b.ToTable("Password");
+            });
 
             modelBuilder.Entity<RolePermission>().HasKey(rp => new { rp.RoleID, rp.PermissionID });
 
@@ -39,6 +56,7 @@ namespace LibraryIdentityProvider.EFCore
                 .HasOne(rp => rp.Permission)
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.PermissionID);
+
         }
     }
 }
