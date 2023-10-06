@@ -28,6 +28,7 @@
     <Folder Include="Controllers\" />
     <Folder Include="Features\RoleManagement\" />
     <Folder Include="Features\TokenManagement\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

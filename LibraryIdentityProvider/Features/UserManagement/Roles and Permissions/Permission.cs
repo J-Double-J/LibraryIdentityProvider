@@ -1,10 +1,11 @@
-﻿using LibraryIdentityProvider.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions
 {
-    public class Permission : Entity
+    public class Permission
     {
-        public Permission(Guid guid, string name, string description) : base(guid)
+        public Permission(string name, string description)
         {
             Name = name;
 
@@ -15,14 +16,20 @@ namespace LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions
         /// Constructor for EFCore.
         /// </summary>
         private Permission()
-            : base(Guid.Empty)
         {
             Name = string.Empty;
             Description = string.Empty;
         }
 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int PermissionID { get; private set; }
+
         public string Name { get; set; }
+
         public string Description { get; set; }
+
         public List<RolePermission> RolePermissions { get; private set; } = new();
+
     }
 }

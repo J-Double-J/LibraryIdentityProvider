@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LibraryIdentityProvider.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231004021149_Added Role and Permission Entities")]
-    partial class AddedRoleandPermissionEntities
+    [Migration("20231006133648_RecreateDB")]
+    partial class RecreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,33 @@ namespace LibraryIdentityProvider.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("LibraryIdentityProvider.Entities.Password", b =>
+                {
+                    b.Property<int>("PasswordID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PasswordID"));
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<byte[]>("Salt")
+                        .IsRequired()
+                        .HasColumnType("bytea");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("PasswordID");
+
+                    b.HasIndex("UserID")
+                        .IsUnique();
+
+                    b.ToTable("Password", (string)null);
+                });
 
             modelBuilder.Entity("LibraryIdentityProvider.Entities.UserAccount", b =>
                 {
@@ -53,14 +80,16 @@ namespace LibraryIdentityProvider.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserAccount");
+                    b.ToTable("UserAccount", (string)null);
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Role", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("RoleID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoleID"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -70,16 +99,18 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("RoleID");
 
                     b.ToTable("Role");
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.Permission", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("PermissionID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PermissionID"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -89,24 +120,33 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("PermissionID");
 
                     b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.RolePermission", b =>
                 {
-                    b.Property<Guid>("RoleID")
-                        .HasColumnType("uuid");
+                    b.Property<int>("RoleID")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("PermissionID")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PermissionID")
+                        .HasColumnType("integer");
 
                     b.HasKey("RoleID", "PermissionID");
 
                     b.HasIndex("PermissionID");
 
                     b.ToTable("RolePermission");
+                });
+
+            modelBuilder.Entity("LibraryIdentityProvider.Entities.Password", b =>
+                {
+                    b.HasOne("LibraryIdentityProvider.Entities.UserAccount", null)
+                        .WithOne()
+                        .HasForeignKey("LibraryIdentityProvider.Entities.Password", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.RolePermission", b =>

@@ -82,9 +82,11 @@ namespace LibraryIdentityProvider.Migrations
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Role", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("RoleID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoleID"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -94,16 +96,18 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("RoleID");
 
                     b.ToTable("Role");
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.Permission", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("PermissionID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PermissionID"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -113,18 +117,18 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("PermissionID");
 
                     b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.RolePermission", b =>
                 {
-                    b.Property<Guid>("RoleID")
-                        .HasColumnType("uuid");
+                    b.Property<int>("RoleID")
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("PermissionID")
-                        .HasColumnType("uuid");
+                    b.Property<int>("PermissionID")
+                        .HasColumnType("integer");
 
                     b.HasKey("RoleID", "PermissionID");
 
