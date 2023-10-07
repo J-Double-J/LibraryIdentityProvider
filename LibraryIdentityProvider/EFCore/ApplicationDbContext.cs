@@ -19,6 +19,8 @@ namespace LibraryIdentityProvider.EFCore
 
         public DbSet<RolePermission> RolePermission { get; set; }
 
+        public DbSet<RoleUser> RoleUser { get; set; }
+
         async Task<int> IApplicationDbContext.SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
@@ -57,6 +59,17 @@ namespace LibraryIdentityProvider.EFCore
                 .WithMany(p => p.RolePermissions)
                 .HasForeignKey(rp => rp.PermissionID);
 
+            modelBuilder.Entity<RoleUser>().HasKey(ru => new { ru.RoleID, ru.UserID });
+
+            modelBuilder.Entity<RoleUser>()
+                .HasOne(ru => ru.Role)
+                .WithMany(r => r.RoleUsers)
+                .HasForeignKey(ru => ru.RoleID);
+
+            modelBuilder.Entity<RoleUser>()
+                .HasOne(ru => ru.UserAccount)
+                .WithMany(u => u.RoleUsers)
+                .HasForeignKey(rp => rp.UserID);
         }
     }
 }

@@ -1,4 +1,7 @@
 ﻿
+using LibraryIdentityProvider.Features.UserManagement;
+using LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions;
+
 namespace LibraryIdentityProvider.Entities
 {
     public class UserAccount : Entity
@@ -17,20 +20,22 @@ namespace LibraryIdentityProvider.Entities
         {
         }
 
-        public UserAccount(Guid guid, string username, string[] claims, string email, string firstName, string lastName)
+        public UserAccount(Guid guid, string username, List<Role> roles, string email, string firstName, string lastName)
             : base(guid)
         {
             Username = username;
-            Claims = claims;
+            Roles = roles;
             Email = email;
             FirstName = firstName;
             LastName = lastName;
         }
 
         public string Username { get; private set; }
-        public string[] Claims { get; private set; }
+        public List<Role> Roles { get; private set; }
         public string Email { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
+
+        public List<RoleUser> RoleUsers { get; private set; } = new();
     }
 }

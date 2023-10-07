@@ -3,6 +3,7 @@ using FluentValidation;
 using LibraryIdentityProvider.EFCore;
 using LibraryIdentityProvider.Features.AuthenticationAuthorization.PasswordSecurity;
 using LibraryIdentityProvider.Features.UserManagement;
+using LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +59,7 @@ namespace LibraryIdentityProvider
         {
             services.AddScoped<IUserAccountRepository, UserAccountRepository>();
             services.AddScoped<IPasswordRepository, PasswordRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
         }
     }
 }

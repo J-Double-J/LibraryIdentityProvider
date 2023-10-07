@@ -1,4 +1,5 @@
-﻿using LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions;
+﻿using LibraryIdentityProvider.Entities;
+using LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -30,5 +31,6 @@ namespace LibraryIdentityProvider.Features.UserManagement
         public string Description { get; set; }
 
         public List<RolePermission> RolePermissions { get; private set; } = new();
+        public List<RoleUser> RoleUsers { get; private set; } = new();
     }
 }

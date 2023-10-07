@@ -1,18 +1,17 @@
 ﻿using LibraryIdentityProvider.Entities;
 using LibraryIdentityProvider.Features.AuthenticationAuthorization.PasswordSecurity;
+using LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions;
 using LibraryIdentityProvider.Patterns.CQRS;
 using LibraryIdentityProvider.Patterns.ResultAndError;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace LibraryIdentityProvider.Features.UserManagement
 {
     public sealed class CreateUserAccountCommand : ICommand<UserAccount>
     {
-        public CreateUserAccountCommand(string username, string password, string[] claims, string email, string firstName, string lastName)
+        public CreateUserAccountCommand(string username, string password, string email, string firstName, string lastName)
         {
             Username = username;
             Password = password;
-            Claims = claims;
             Email = email;
             FirstName = firstName;
             LastName = lastName;
@@ -20,36 +19,51 @@ namespace LibraryIdentityProvider.Features.UserManagement
 
         public string Username { get; private set; }
         public string Password { get; private set; }
-        public string[] Claims { get; private set; }
         public string Email { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
 
         public sealed class CreateUserAccountHandler : ICommandHandler<CreateUserAccountCommand, UserAccount>
         {
-            IUserAccountRepository _repository;
+            IUserAccountRepository _accountRepository;
             IPasswordRepository _passwordRepository;
+            IRoleRepository _roleRepository;
 
-            public CreateUserAccountHandler(IUserAccountRepository repository, IPasswordRepository passwordRepository)
+            public CreateUserAccountHandler(IUserAccountRepository accountRepository,
+                                            IPasswordRepository passwordRepository,
+                                            IRoleRepository roleRepository)
             {
-                _repository = repository;
+                _accountRepository = accountRepository;
                 _passwordRepository = passwordRepository;
+                _roleRepository = roleRepository;
             }
 
             public async Task<Result<UserAccount>> Handle(CreateUserAccountCommand request, CancellationToken cancellationToken)
             {
                 PasswordSecurityService passService = new(_passwordRepository);
 
-                UserAccount account = new(Guid.NewGuid(), request.Username, request.Claims, request.Email, request.FirstName, request.LastName);
+                Result<Role> roleResult = await _roleRepository.GetRole("BasicUser");
 
-                Result result = await passService.CreateAndStorePasswordHash(account.Id, request.Password);
-
-                if (result.IsFailure)
+                if (roleResult.IsFailure)
                 {
-                    return Result.Failure<UserAccount>(null, result.Error!);
+                    return Result.Failure<UserAccount>(null, roleResult.Error!);
                 }
 
-                return await _repository.AddUserAccount(account);
+                UserAccount account = new(Guid.NewGuid(),
+                                          request.Username,
+                                          new List<Role>() { roleResult.Value },
+                                          request.Email,
+                                          request.FirstName,
+                                          request.LastName);
+
+                Result passResult = await passService.CreateAndStorePasswordHash(account.Id, request.Password);
+
+                if (passResult.IsFailure)
+                {
+                    return Result.Failure<UserAccount>(null, passResult.Error!);
+                }
+
+                return await _accountRepository.AddUserAccount(account);
             }
         }
     }

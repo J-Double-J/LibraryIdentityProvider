@@ -8,6 +8,7 @@ namespace LibraryIdentityProvider.EFCore
     public interface IApplicationDbContext
     {
         public DbSet<UserAccount> UserAccount { get; set; }
+
         public DbSet<Password> Password { get; set; }
 
         public DbSet<Role> Role { get; set; }
@@ -15,6 +16,8 @@ namespace LibraryIdentityProvider.EFCore
         public DbSet<Permission> Permission { get; set; }
 
         public DbSet<RolePermission> RolePermission { get; set; }
+
+        public DbSet<RoleUser> RoleUser { get; set; }
 
         public Task<int> SaveChangesAsync();
     }
