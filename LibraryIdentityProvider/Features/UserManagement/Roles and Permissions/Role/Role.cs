@@ -1,5 +1,6 @@
 ﻿using LibraryIdentityProvider.Entities;
 using LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,6 +33,7 @@ namespace LibraryIdentityProvider.Features.UserManagement
 
         public List<Permission> Permissions { get; private set; } = new();
 
+        [JsonIgnore]
         public List<UserAccount> Users { get; private set; } = new();
     }
 }
