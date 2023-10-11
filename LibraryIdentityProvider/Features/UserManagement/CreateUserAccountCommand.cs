@@ -56,7 +56,7 @@ namespace LibraryIdentityProvider.Features.UserManagement
                                           request.FirstName,
                                           request.LastName);
 
-                Result passResult = await passService.CreateAndStorePasswordHash(account.Id, request.Password);
+                Result passResult = await passService.CreateAndStorePasswordHash(account.ID, request.Password);
 
                 if (passResult.IsFailure)
                 {

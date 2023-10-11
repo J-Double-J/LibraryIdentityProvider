@@ -36,6 +36,6 @@ namespace LibraryIdentityProvider.Entities
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
 
-        public List<RoleUser> RoleUsers { get; private set; } = new();
+        //public List<RoleUser> RoleUsers { get; private set; } = new();
     }
 }

@@ -51,7 +51,7 @@ namespace LibraryIdentityProvider.Migrations
 
             modelBuilder.Entity("LibraryIdentityProvider.Entities.UserAccount", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
@@ -71,18 +71,18 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("ID");
 
                     b.ToTable("UserAccount", (string)null);
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Role", b =>
                 {
-                    b.Property<int>("RoleID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoleID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -92,23 +92,18 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("UserAccountId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("RoleID");
-
-                    b.HasIndex("UserAccountId");
+                    b.HasKey("ID");
 
                     b.ToTable("Role");
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.Permission", b =>
                 {
-                    b.Property<int>("PermissionID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PermissionID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -118,22 +113,22 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("PermissionID");
+                    b.HasKey("ID");
 
                     b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.RolePermission", b =>
                 {
-                    b.Property<int>("RoleID")
-                        .HasColumnType("integer");
-
                     b.Property<int>("PermissionID")
                         .HasColumnType("integer");
 
-                    b.HasKey("RoleID", "PermissionID");
+                    b.Property<int>("RoleID")
+                        .HasColumnType("integer");
 
-                    b.HasIndex("PermissionID");
+                    b.HasKey("PermissionID", "RoleID");
+
+                    b.HasIndex("RoleID");
 
                     b.ToTable("RolePermission");
                 });
@@ -143,12 +138,12 @@ namespace LibraryIdentityProvider.Migrations
                     b.Property<int>("RoleID")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("UserID")
+                    b.Property<Guid>("UserAccountID")
                         .HasColumnType("uuid");
 
-                    b.HasKey("RoleID", "UserID");
+                    b.HasKey("RoleID", "UserAccountID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserAccountID");
 
                     b.ToTable("RoleUser");
                 });
@@ -162,68 +157,34 @@ namespace LibraryIdentityProvider.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Role", b =>
-                {
-                    b.HasOne("LibraryIdentityProvider.Entities.UserAccount", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("UserAccountId");
-                });
-
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.RolePermission", b =>
                 {
-                    b.HasOne("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.Permission", "Permission")
-                        .WithMany("RolePermissions")
+                    b.HasOne("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.Permission", null)
+                        .WithMany()
                         .HasForeignKey("PermissionID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryIdentityProvider.Features.UserManagement.Role", "Role")
-                        .WithMany("RolePermissions")
+                    b.HasOne("LibraryIdentityProvider.Features.UserManagement.Role", null)
+                        .WithMany()
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.RoleUser", b =>
                 {
-                    b.HasOne("LibraryIdentityProvider.Features.UserManagement.Role", "Role")
-                        .WithMany("RoleUsers")
+                    b.HasOne("LibraryIdentityProvider.Features.UserManagement.Role", null)
+                        .WithMany()
                         .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryIdentityProvider.Entities.UserAccount", "UserAccount")
-                        .WithMany("RoleUsers")
-                        .HasForeignKey("UserID")
+                    b.HasOne("LibraryIdentityProvider.Entities.UserAccount", null)
+                        .WithMany()
+                        .HasForeignKey("UserAccountID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("UserAccount");
-                });
-
-            modelBuilder.Entity("LibraryIdentityProvider.Entities.UserAccount", b =>
-                {
-                    b.Navigation("RoleUsers");
-
-                    b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Role", b =>
-                {
-                    b.Navigation("RolePermissions");
-
-                    b.Navigation("RoleUsers");
-                });
-
-            modelBuilder.Entity("LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
                 });
 #pragma warning restore 612, 618
         }

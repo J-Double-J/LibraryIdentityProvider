@@ -6,10 +6,10 @@ namespace LibraryIdentityProvider.Entities
     {
         protected Entity(Guid id)
         {
-            Id = id;
+            ID = id;
         }
 
-        public Guid Id { get; private init; }
+        public Guid ID { get; private init; }
 
         public static bool operator ==(Entity? left, Entity? right)
         {
@@ -38,7 +38,7 @@ namespace LibraryIdentityProvider.Entities
                 return false;
             }
 
-            return entity.Id == Id;
+            return entity.ID == ID;
         }
 
         public bool Equals(Entity? other)
@@ -53,12 +53,12 @@ namespace LibraryIdentityProvider.Entities
                 return false;
             }
 
-            return other.Id == Id;
+            return other.ID == ID;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode();
+            return ID.GetHashCode();
         }
     }
 }
