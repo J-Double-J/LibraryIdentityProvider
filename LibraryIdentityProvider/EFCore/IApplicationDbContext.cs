@@ -15,9 +15,9 @@ namespace LibraryIdentityProvider.EFCore
 
         public DbSet<Permission> Permission { get; set; }
 
-        public DbSet<RolePermission> RolePermission { get; set; }
+        //public DbSet<RolePermission> RolePermission { get; set; }
 
-        public DbSet<RoleUser> RoleUser { get; set; }
+        //public DbSet<RoleUser> RoleUser { get; set; }
 
         public Task<int> SaveChangesAsync();
     }

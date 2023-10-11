@@ -23,13 +23,12 @@ namespace LibraryIdentityProvider.Features.UserManagement.Roles_and_Permissions
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PermissionID { get; private set; }
+        public int ID { get; private set; }
 
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public List<RolePermission> RolePermissions { get; private set; } = new();
-
+        public List<Role> Roles { get; private set; } = new();
     }
 }
